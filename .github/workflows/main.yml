@@ -1,0 +1,46 @@
+name: CI/CD for HTML Webpage
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Build HTML
+        run: |
+          # Add your build commands here, e.g., npm install or copy files.
+          # For example, if you're using a static site generator:
+          # npm install
+          # npm run build
+          # If it's a plain HTML file, you might just copy files.
+          cp -r * $GITHUB_WORKSPACE/dist
+
+deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ 192.168.186.129 }}
+          username: ${{ barath }}
+          key: ${{ ssh-rsaAAAAB3NzaC1yc2EAAAADAQABAAABgQCuFuRLon9DiyCkPaKGhwHkmtbkQfyJxXFyt50nJRKS8ogTrUQN7pm3WXvIKym8hdxSVBekbuVKzpAQYycpcLXq/tBb66Lj372G8h1In/jssh-rsaAvYa0aW88mWj4oLKlvRgHbW8nSXVrlrNcJRRJH6legAUMlEin5SaX29rAgrBGLKap/qJb6CD9KxQyXHFmynLHj51iDY9+uSXdIQGrXKRuDgsJ2KLPjyE3j25xpqk5lYyLk1JN624fErYE7cs6LrjP1rTDLFXedS0aBIbg2pNO6o2bKckaDM2InDnKq5iYn8+Ut6WeVsT4nTtOYzsDUwjSzsbP78B+tBPWa7YI7NAoSPGNqMRdIj3qxUtNbplQIR43bvDYpv4una4PWvGhsVmpIArcsghAR4S9nvHFL6NF5iZpGIpzR/QUFmUoNDWAWJcPH97ySdgJ4xbgRWC46Ov4n+mJH5VtNxdcnhoojkviyNdJRdj70=barath@ubuntuserver }}
+          script: |
+            cd /home/barath/html_cicd
+            git pull origin main
+            # Add any additional commands to restart services, etc.
+
+
+
+
+
+
+
+
